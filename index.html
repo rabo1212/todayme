@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 나에게 | 하루 한 질문</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --white: #FAFAFA;
+            --black: #1A1A1A;
+            --gray-100: #F5F5F5;
+            --gray-200: #E8E8E8;
+            --gray-300: #D4D4D4;
+            --gray-400: #A3A3A3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+        }
+        
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250, 250, 250, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .logo {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-500);
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--black);
+        }
+        
+        .nav-links a.active {
+            color: var(--black);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 120px 24px 60px;
+        }
+        
+        /* Date Display */
+        .date-display {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .date-display .year {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+        
+        .date-display .date {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--black);
+        }
+        
+        /* Random Image */
+        .daily-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--gray-100);
+            border-radius: 2px;
+            margin-bottom: 48px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .daily-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.3s;
+        }
+        
+        .daily-image:hover img {
+            filter: grayscale(0%);
+        }
+        
+        .image-credit {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.6);
+            background: rgba(0,0,0,0.3);
+            padding: 4px 8px;
+            border-radius: 2px;
+        }
+        
+        /* Question Section */
+        .question-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .question-label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--black);
+            letter-spacing: -0.01em;
+        }
+        
+        /* Answer Section */
+        .answer-section {
+            margin-bottom: 32px;
+        }
+        
+        .answer-label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+        
+        .answer-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            border-radius: 2px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            resize: vertical;
+            transition: border-color 0.2s;
+            background: var(--white);
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--gray-400);
+        }
+        
+        .answer-input::placeholder {
+            color: var(--gray-300);
+        }
+        
+        /* Emotion Selector */
+        .emotion-section {
+            margin-bottom: 32px;
+        }
+        
+        .emotion-label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+        
+        .emotion-options {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .emotion-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--gray-200);
+            border-radius: 50%;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .emotion-btn:hover {
+            border-color: var(--gray-400);
+            transform: translateY(-2px);
+        }
+        
+        .emotion-btn.selected {
+            background: var(--black);
+            border-color: var(--black);
+            transform: scale(1.1);
+        }
+        
+        .emotion-btn.selected span {
+            filter: grayscale(0);
+        }
+        
+        .emotion-btn span {
+            filter: grayscale(100%);
+            transition: filter 0.2s;
+        }
+        
+        .emotion-btn:hover span {
+            filter: grayscale(0);
+        }
+        
+        /* Save Button */
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 2px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.05em;
+        }
+        
+        .save-btn:hover {
+            background: var(--gray-700);
+        }
+        
+        .save-btn:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+        }
+        
+        /* Quote */
+        .daily-quote {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--gray-200);
+            text-align: center;
+        }
+        
+        .daily-quote p {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            font-style: italic;
+            line-height: 1.8;
+        }
+        
+        .daily-quote .author {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            font-style: normal;
+        }
+        
+        /* Calendar Page */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .calendar-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .calendar-nav button {
+            background: none;
+            border: 1px solid var(--gray-200);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray-500);
+        }
+        
+        .calendar-nav button:hover {
+            border-color: var(--black);
+            color: var(--black);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            padding: 8px 0;
+            letter-spacing: 0.05em;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--gray-100);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .calendar-day:hover {
+            border-color: var(--gray-300);
+        }
+        
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        
+        .calendar-day.has-entry {
+            background: var(--gray-100);
+        }
+        
+        .calendar-day.today {
+            border: 2px solid var(--black);
+        }
+        
+        .calendar-day .day-number {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+        
+        .calendar-day .day-emotion {
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+        
+        /* Entry Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-400);
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: var(--black);
+        }
+        
+        .modal-date {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+        }
+        
+        .modal-question {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.1rem;
+            color: var(--black);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        
+        .modal-answer {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            line-height: 1.8;
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: 2px;
+        }
+        
+        .modal-emotion {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Report Page */
+        .report-section {
+            margin-bottom: 48px;
+        }
+        
+        .report-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 24px;
+            color: var(--black);
+        }
+        
+        .emotion-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-bar .bar {
+            width: 24px;
+            background: var(--gray-300);
+            border-radius: 2px 2px 0 0;
+            transition: height 0.3s;
+        }
+        
+        .chart-bar .label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+        }
+        
+        .emotion-summary {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .emotion-stat {
+            text-align: center;
+            padding: 16px;
+            background: var(--gray-100);
+            border-radius: 2px;
+        }
+        
+        .emotion-stat .emoji {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .emotion-stat .count {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--black);
+        }
+        
+        .emotion-stat .label {
+            font-size: 0.7rem;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+        
+        .monthly-message {
+            padding: 32px;
+            background: var(--gray-100);
+            border-radius: 2px;
+            text-align: center;
+        }
+        
+        .monthly-message p {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--gray-600);
+        }
+        
+        /* Guide Page */
+        .guide-section {
+            margin-bottom: 48px;
+        }
+        
+        .guide-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        
+        .guide-content {
+            color: var(--gray-600);
+            line-height: 1.9;
+            font-size: 0.95rem;
+        }
+        
+        .guide-step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: var(--gray-100);
+            border-radius: 2px;
+        }
+        
+        .guide-step .number {
+            width: 32px;
+            height: 32px;
+            background: var(--black);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        
+        .guide-step .text h4 {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .guide-step .text p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            line-height: 1.7;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--black);
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 2px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 300;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            nav {
+                padding: 16px 20px;
+            }
+            
+            .nav-links {
+                gap: 20px;
+            }
+            
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+            
+            .container {
+                padding: 100px 20px 40px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .emotion-options {
+                gap: 8px;
+            }
+            
+            .emotion-btn {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .emotion-summary {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+            }
+            
+            .emotion-stat {
+                padding: 12px 8px;
+            }
+            
+            .emotion-stat .emoji {
+                font-size: 1.2rem;
+            }
+            
+            .emotion-stat .count {
+                font-size: 1rem;
+            }
+            
+            .guide-step {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+        
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">오늘의 나에게</div>
+        <div class="nav-links">
+            <a href="#" data-page="home" class="active">오늘</a>
+            <a href="#" data-page="calendar">캘린더</a>
+            <a href="#" data-page="report">리포트</a>
+            <a href="#" data-page="guide">사용법</a>
+        </div>
+    </nav>
+    
+    <!-- Home Page -->
+    <div class="container">
+        <div id="home" class="page active">
+            <div class="date-display fade-in delay-1">
+                <div class="year" id="year"></div>
+                <div class="date" id="date"></div>
+            </div>
+            
+            <div class="daily-image fade-in delay-2">
+                <img id="dailyImage" src="" alt="오늘의 이미지">
+                <span class="image-credit">Picsum</span>
+            </div>
+            
+            <div class="question-section fade-in delay-3">
+                <div class="question-label">Today's Question</div>
+                <p class="question" id="question"></p>
+            </div>
+            
+            <div class="answer-section fade-in delay-4">
+                <div class="answer-label">나의 기록</div>
+                <textarea class="answer-input" id="answer" placeholder="단 한 줄이어도 괜찮아요. 오늘의 나에게 솔직해져 보세요."></textarea>
+            </div>
+            
+            <div class="emotion-section fade-in delay-4">
+                <div class="emotion-label">오늘의 감정</div>
+                <div class="emotion-options">
+                    <button class="emotion-btn" data-emotion="happy"><span>😊</span></button>
+                    <button class="emotion-btn" data-emotion="calm"><span>😌</span></button>
+                    <button class="emotion-btn" data-emotion="tired"><span>😔</span></button>
+                    <button class="emotion-btn" data-emotion="anxious"><span>😰</span></button>
+                    <button class="emotion-btn" data-emotion="sad"><span>😢</span></button>
+                </div>
+            </div>
+            
+            <button class="save-btn fade-in delay-4" id="saveBtn">기록 저장하기</button>
+            
+            <div class="daily-quote fade-in delay-4">
+                <p id="quoteText"></p>
+                <div class="author" id="quoteAuthor"></div>
+            </div>
+        </div>
+        
+        <!-- Calendar Page -->
+        <div id="calendar" class="page">
+            <div class="calendar-header">
+                <h2 class="calendar-title" id="calendarTitle"></h2>
+                <div class="calendar-nav">
+                    <button id="prevMonth">←</button>
+                    <button id="nextMonth">→</button>
+                </div>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="calendar-day-header">일</div>
+                <div class="calendar-day-header">월</div>
+                <div class="calendar-day-header">화</div>
+                <div class="calendar-day-header">수</div>
+                <div class="calendar-day-header">목</div>
+                <div class="calendar-day-header">금</div>
+                <div class="calendar-day-header">토</div>
+            </div>
+            
+            <p style="text-align: center; color: var(--gray-400); font-size: 0.85rem; margin-top: 24px;">
+                기록이 있는 날을 클릭하면 내용을 볼 수 있어요
+            </p>
+        </div>
+        
+        <!-- Report Page -->
+        <div id="report" class="page">
+            <div class="report-section">
+                <h3 class="report-title" id="reportTitle"></h3>
+                
+                <div class="emotion-summary" id="emotionSummary">
+                    <div class="emotion-stat">
+                        <div class="emoji">😊</div>
+                        <div class="count" id="happyCount">0</div>
+                        <div class="label">행복</div>
+                    </div>
+                    <div class="emotion-stat">
+                        <div class="emoji">😌</div>
+                        <div class="count" id="calmCount">0</div>
+                        <div class="label">평온</div>
+                    </div>
+                    <div class="emotion-stat">
+                        <div class="emoji">😔</div>
+                        <div class="count" id="tiredCount">0</div>
+                        <div class="label">지침</div>
+                    </div>
+                    <div class="emotion-stat">
+                        <div class="emoji">😰</div>
+                        <div class="count" id="anxiousCount">0</div>
+                        <div class="label">불안</div>
+                    </div>
+                    <div class="emotion-stat">
+                        <div class="emoji">😢</div>
+                        <div class="count" id="sadCount">0</div>
+                        <div class="label">슬픔</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h3 class="report-title">이번 달의 메시지</h3>
+                <div class="monthly-message">
+                    <p id="monthlyMessage">기록을 쌓아가면 이번 달의 감정 흐름을 분석해드릴게요.</p>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h3 class="report-title">기록 현황</h3>
+                <div style="display: flex; justify-content: space-around; padding: 24px; background: var(--gray-100); border-radius: 2px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 500;" id="totalEntries">0</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-400);">총 기록</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 500;" id="monthEntries">0</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-400);">이번 달</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 500;" id="streakDays">0</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-400);">연속 기록</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Guide Page -->
+        <div id="guide" class="page">
+            <div class="guide-section">
+                <h3 class="guide-title">오늘의 나에게, 에 오신 것을 환영해요</h3>
+                <p class="guide-content">
+                    바쁜 일상 속에서 잠시 멈추고, 나 자신에게 집중하는 시간을 가져보세요.
+                    매일 하나의 질문에 답하며 내 마음을 들여다보는 작은 습관이
+                    어느새 큰 위로가 될 거예요.
+                </p>
+            </div>
+            
+            <div class="guide-section">
+                <h3 class="guide-title">사용 방법</h3>
+                
+                <div class="guide-step">
+                    <div class="number">1</div>
+                    <div class="text">
+                        <h4>오늘의 질문 확인하기</h4>
+                        <p>매일 새로운 질문이 준비되어 있어요. 질문과 함께 제공되는 이미지도 하루의 영감이 되어줄 거예요.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="number">2</div>
+                    <div class="text">
+                        <h4>솔직하게 기록하기</h4>
+                        <p>단 한 줄이어도 괜찮아요. 길게 쓰지 않아도, 완벽하지 않아도 돼요. 그냥 지금 떠오르는 생각을 적어보세요.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="number">3</div>
+                    <div class="text">
+                        <h4>오늘의 감정 선택하기</h4>
+                        <p>다섯 가지 감정 중 오늘 나와 가장 가까운 것을 골라주세요. 한 달 동안의 감정 흐름을 한눈에 볼 수 있어요.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="number">4</div>
+                    <div class="text">
+                        <h4>캘린더로 돌아보기</h4>
+                        <p>지난 기록들을 캘린더에서 확인할 수 있어요. 과거의 나는 어떤 생각을 했는지 돌아보는 것도 좋은 시간이 될 거예요.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="number">5</div>
+                    <div class="text">
+                        <h4>월간 리포트 확인하기</h4>
+                        <p>한 달간의 감정 변화를 그래프로 확인하고, 나만의 감정 패턴을 발견해보세요.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="guide-section">
+                <h3 class="guide-title">혼자여도 괜찮아요</h3>
+                <p class="guide-content">
+                    당신은 지금 충분히 잘 하고 있어요.<br>
+                    완벽하지 않아도, 가끔 지쳐도, 그래도 매일 살아가고 있잖아요.<br>
+                    이 작은 기록이 당신에게 작은 위안이 되길 바라요.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="entryModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="modal-date" id="modalDate"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            <div class="modal-answer" id="modalAnswer"></div>
+            <div class="modal-emotion" id="modalEmotion"></div>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast">기록이 저장되었어요 ✨</div>
+    
+    <script>
+        // Questions (50개)
+        const questions = [
+            "오늘 가장 나를 웃게 만든 순간은 언제였나요?",
+            "지금 가장 감사한 것 세 가지는 무엇인가요?",
+            "오늘 나에게 해주고 싶은 말이 있다면요?",
+            "최근 나를 가장 설레게 한 것은 무엇인가요?",
+            "지금 가장 보고 싶은 사람은 누구인가요?",
+            "오늘 하루, 나에게 점수를 준다면 몇 점인가요?",
+            "최근 가장 뿌듯했던 순간은 언제였나요?",
+            "지금 가장 하고 싶은 일은 무엇인가요?",
+            "나를 가장 편하게 해주는 것은 무엇인가요?",
+            "오늘 나는 어떤 색깔인 것 같나요?",
+            "최근 읽은 글이나 본 영상 중 마음에 남는 것이 있나요?",
+            "지금 나에게 필요한 것은 무엇인가요?",
+            "10년 전의 나에게 해주고 싶은 말이 있나요?",
+            "10년 후의 나는 어떤 모습일까요?",
+            "오늘 가장 맛있게 먹은 음식은 무엇인가요?",
+            "나를 가장 잘 아는 사람은 누구인가요?",
+            "최근 나를 힘들게 한 일은 무엇인가요?",
+            "그 일을 어떻게 극복하고 있나요?",
+            "가장 좋아하는 계절과 그 이유는 무엇인가요?",
+            "오늘 밤 꿈에서 만나고 싶은 사람이 있나요?",
+            "나의 가장 큰 장점은 무엇인가요?",
+            "고치고 싶은 습관이 있나요?",
+            "최근 새롭게 시작한 것이 있나요?",
+            "가장 오래된 물건 중 버리지 못하는 것은 무엇인가요?",
+            "나를 한 단어로 표현한다면?",
+            "오늘 가장 많이 한 생각은 무엇인가요?",
+            "최근 가장 많이 들은 노래는 무엇인가요?",
+            "지금 당장 여행을 갈 수 있다면 어디로 가고 싶나요?",
+            "나만의 작은 행복 의식이 있나요?",
+            "최근 누군가에게 받은 칭찬이 있나요?",
+            "가장 자주 하는 걱정은 무엇인가요?",
+            "그 걱정이 현실이 될 확률은 몇 퍼센트일까요?",
+            "나를 응원해주는 사람은 누구인가요?",
+            "오늘 가장 인상 깊었던 장면은 무엇인가요?",
+            "나의 취미는 무엇인가요? 언제 마지막으로 했나요?",
+            "지금 가장 걱정되는 일은 무엇인가요?",
+            "그 걱정을 덜 수 있는 방법이 있을까요?",
+            "최근 가장 큰 변화는 무엇인가요?",
+            "나에게 용기를 주는 것은 무엇인가요?",
+            "오늘 하루를 한 문장으로 정리한다면?",
+            "가장 좋아하는 시간대는 언제인가요?",
+            "나를 가장 행복하게 하는 작은 일은 무엇인가요?",
+            "최근 포기하고 싶었던 순간이 있었나요?",
+            "그때 어떻게 버텼나요?",
+            "지금 가장 듣고 싶은 말은 무엇인가요?",
+            "나의 꿈은 무엇인가요?",
+            "그 꿈을 위해 오늘 할 수 있는 작은 일은 무엇일까요?",
+            "최근 가장 고마웠던 순간은 언제였나요?",
+            "내일의 나에게 해주고 싶은 말이 있나요?",
+            "지금 이 순간, 나는 괜찮은가요?"
+        ];
+        
+        // Quotes
+        const quotes = [
+            { text: "완벽하지 않아도 괜찮아요. 그냥 지금 이대로도 충분해요.", author: "" },
+            { text: "오늘도 수고했어요. 내일은 조금 더 나아질 거예요.", author: "" },
+            { text: "당신이 느끼는 감정은 모두 자연스러운 거예요.", author: "" },
+            { text: "쉬어가도 돼요. 멈춘다고 뒤처지는 게 아니에요.", author: "" },
+            { text: "작은 것에도 감사할 줄 아는 당신은 이미 충분히 멋져요.", author: "" },
+            { text: "혼자라고 느껴져도, 당신 곁엔 늘 누군가 있어요.", author: "" },
+            { text: "지금 힘든 이 시간도 언젠간 지나갈 거예요.", author: "" },
+            { text: "실패해도 괜찮아요. 다시 시작하면 되니까요.", author: "" },
+            { text: "당신의 속도로 가도 돼요. 비교하지 않아도 돼요.", author: "" },
+            { text: "오늘의 나에게 '잘했어'라고 말해주세요.", author: "" }
+        ];
+        
+        // Emotion emojis
+        const emotionEmojis = {
+            happy: '😊',
+            calm: '😌',
+            tired: '😔',
+            anxious: '😰',
+            sad: '😢'
+        };
+        
+        // State
+        let selectedEmotion = null;
+        let currentCalendarDate = new Date();
+        let entries = JSON.parse(localStorage.getItem('dailyEntries')) || {};
+        
+        // Get today's data based on date
+        function getTodayData() {
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            
+            return {
+                dateStr,
+                questionIndex: dayOfYear % questions.length,
+                imageIndex: dayOfYear % 50,
+                quoteIndex: dayOfYear % quotes.length
+            };
+        }
+        
+        // Initialize
+        function init() {
+            const today = new Date();
+            const todayData = getTodayData();
+            
+            // Set date
+            document.getElementById('year').textContent = today.getFullYear();
+            document.getElementById('date').textContent = `${today.getMonth() + 1}월 ${today.getDate()}일 ${['일', '월', '화', '수', '목', '금', '토'][today.getDay()]}요일`;
+            
+            // Set question
+            document.getElementById('question').textContent = questions[todayData.questionIndex];
+            
+            // Set image (using picsum.photos with seed for consistent daily images)
+            const imageUrl = `https://picsum.photos/seed/${todayData.imageIndex + 100}/800/450`;
+            document.getElementById('dailyImage').src = imageUrl;
+            
+            // Set quote
+            const quote = quotes[todayData.quoteIndex];
+            document.getElementById('quoteText').textContent = `"${quote.text}"`;
+            document.getElementById('quoteAuthor').textContent = quote.author;
+            
+            // Load today's entry if exists
+            if (entries[todayData.dateStr]) {
+                const entry = entries[todayData.dateStr];
+                document.getElementById('answer').value = entry.answer || '';
+                if (entry.emotion) {
+                    selectEmotion(entry.emotion);
+                }
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Render calendar
+            renderCalendar();
+            
+            // Render report
+            renderReport();
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = e.target.dataset.page;
+                    showPage(page);
+                });
+            });
+            
+            // Emotion buttons
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectEmotion(btn.dataset.emotion);
+                });
+            });
+            
+            // Save button
+            document.getElementById('saveBtn').addEventListener('click', saveEntry);
+            
+            // Calendar navigation
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                renderCalendar();
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                renderCalendar();
+            });
+            
+            // Modal close
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('entryModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('entryModal')) {
+                    closeModal();
+                }
+            });
+        }
+        
+        // Show page
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === pageId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            if (pageId === 'calendar') {
+                renderCalendar();
+            } else if (pageId === 'report') {
+                renderReport();
+            }
+        }
+        
+        // Select emotion
+        function selectEmotion(emotion) {
+            selectedEmotion = emotion;
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.emotion === emotion) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+        
+        // Save entry
+        function saveEntry() {
+            const todayData = getTodayData();
+            const answer = document.getElementById('answer').value.trim();
+            
+            if (!answer && !selectedEmotion) {
+                showToast('기록이나 감정을 입력해주세요');
+                return;
+            }
+            
+            entries[todayData.dateStr] = {
+                question: questions[todayData.questionIndex],
+                answer: answer,
+                emotion: selectedEmotion,
+                date: todayData.dateStr
+            };
+            
+            localStorage.setItem('dailyEntries', JSON.stringify(entries));
+            showToast('기록이 저장되었어요 ✨');
+        }
+        
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Render calendar
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('calendarTitle').textContent = `${year}년 ${month + 1}월`;
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            
+            const grid = document.getElementById('calendarGrid');
+            
+            // Clear existing days (keep headers)
+            const headers = grid.querySelectorAll('.calendar-day-header');
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+            
+            // Empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-day empty';
+                grid.appendChild(emptyCell);
+            }
+            
+            // Days
+            for (let day = 1; day <= lastDate; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const entry = entries[dateStr];
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                
+                if (entry) {
+                    dayCell.classList.add('has-entry');
+                }
+                
+                if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === day) {
+                    dayCell.classList.add('today');
+                }
+                
+                dayCell.innerHTML = `
+                    <span class="day-number">${day}</span>
+                    ${entry && entry.emotion ? `<span class="day-emotion">${emotionEmojis[entry.emotion]}</span>` : ''}
+                `;
+                
+                if (entry) {
+                    dayCell.addEventListener('click', () => showEntryModal(dateStr));
+                }
+                
+                grid.appendChild(dayCell);
+            }
+        }
+        
+        // Show entry modal
+        function showEntryModal(dateStr) {
+            const entry = entries[dateStr];
+            if (!entry) return;
+            
+            const date = new Date(dateStr);
+            document.getElementById('modalDate').textContent = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+            document.getElementById('modalQuestion').textContent = entry.question;
+            document.getElementById('modalAnswer').textContent = entry.answer || '(기록 없음)';
+            document.getElementById('modalEmotion').textContent = entry.emotion ? emotionEmojis[entry.emotion] : '';
+            
+            document.getElementById('entryModal').classList.add('active');
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('entryModal').classList.remove('active');
+        }
+        
+        // Render report
+        function renderReport() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            
+            document.getElementById('reportTitle').textContent = `${year}년 ${month + 1}월 감정 기록`;
+            
+            // Count emotions for current month
+            const emotionCounts = { happy: 0, calm: 0, tired: 0, anxious: 0, sad: 0 };
+            let monthEntryCount = 0;
+            let totalEntryCount = Object.keys(entries).length;
+            
+            Object.keys(entries).forEach(dateStr => {
+                const entry = entries[dateStr];
+                const entryDate = new Date(dateStr);
+                
+                if (entryDate.getFullYear() === year && entryDate.getMonth() === month) {
+                    monthEntryCount++;
+                    if (entry.emotion) {
+                        emotionCounts[entry.emotion]++;
+                    }
+                }
+            });
+            
+            // Update emotion counts
+            document.getElementById('happyCount').textContent = emotionCounts.happy;
+            document.getElementById('calmCount').textContent = emotionCounts.calm;
+            document.getElementById('tiredCount').textContent = emotionCounts.tired;
+            document.getElementById('anxiousCount').textContent = emotionCounts.anxious;
+            document.getElementById('sadCount').textContent = emotionCounts.sad;
+            
+            // Update stats
+            document.getElementById('totalEntries').textContent = totalEntryCount;
+            document.getElementById('monthEntries').textContent = monthEntryCount;
+            
+            // Calculate streak
+            let streak = 0;
+            let checkDate = new Date();
+            while (true) {
+                const dateStr = checkDate.toISOString().split('T')[0];
+                if (entries[dateStr]) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            document.getElementById('streakDays').textContent = streak;
+            
+            // Generate monthly message
+            const totalEmotions = Object.values(emotionCounts).reduce((a, b) => a + b, 0);
+            let message = "기록을 쌓아가면 이번 달의 감정 흐름을 분석해드릴게요.";
+            
+            if (totalEmotions >= 5) {
+                const maxEmotion = Object.keys(emotionCounts).reduce((a, b) => 
+                    emotionCounts[a] > emotionCounts[b] ? a : b
+                );
+                
+                const messages = {
+                    happy: "이번 달은 행복한 순간이 많았네요! 그 기쁨을 오래 간직하세요. 당신은 충분히 행복할 자격이 있어요.",
+                    calm: "평온한 날들을 보내고 계시네요. 마음의 여유를 가지고 있는 당신이 대단해요.",
+                    tired: "조금 지친 한 달이었군요. 괜찮아요, 쉬어가도 돼요. 당신의 노력은 분명 빛날 거예요.",
+                    anxious: "걱정이 많은 시간을 보내셨네요. 하지만 걱정의 90%는 일어나지 않는다고 해요. 조금씩 내려놓아도 괜찮아요.",
+                    sad: "슬픈 날들이 있었군요. 울어도 괜찮아요. 눈물 뒤엔 분명 맑은 날이 올 거예요."
+                };
+                
+                message = messages[maxEmotion];
+            } else if (totalEmotions > 0) {
+                message = `이번 달 ${totalEmotions}일의 감정을 기록했어요. 조금 더 기록을 쌓으면 당신만의 감정 패턴을 찾아드릴게요.`;
+            }
+            
+            document.getElementById('monthlyMessage').textContent = message;
+        }
+        
+        // Start
+        init();
+    </script>
+</body>
+</html>
